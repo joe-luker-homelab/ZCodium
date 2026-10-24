@@ -17,8 +17,15 @@ function HoverCardContent({
   sideOffset = 4,
   ...props
 }: React.ComponentProps<typeof HoverCardPrimitive.Content>) {
+  // A caller with its own Radix scope (RemoteIdentityHoverCard) passes it to
+  // Root, Trigger and Content; the Portal must get it too, or it looks up the
+  // unscoped context and throws "HoverCardPortal must be used within HoverCard".
+  const { __scopeHoverCard } = props as { __scopeHoverCard?: unknown };
   return (
-    <HoverCardPrimitive.Portal data-slot="hover-card-portal">
+    <HoverCardPrimitive.Portal
+      data-slot="hover-card-portal"
+      {...({ __scopeHoverCard } as Record<string, unknown>)}
+    >
       <HoverCardPrimitive.Content
         data-slot="hover-card-content"
         align={align}
